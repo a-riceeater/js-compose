@@ -10,16 +10,18 @@ const __JETPACK_WINDOW = {};
 
 document.addEventListener("DOMContentLoaded", (e) => {
     try {
-        onCreate()
+        onCreate(__JETPACK_WINDOW)
     } catch (err) {
 
     }
 })
 
 __JETPACK_WINDOW.setContent = function (data) {
-    if (!appTheme) throwJetpackError()
+    console.log(data)
+    if (!data.appTheme) return throwJetpackError("No app theme provided");
+    if (typeof data.appTheme != Object) return throwJetpackError("Invalid app theme type. Type Object expected")
 }
 
-function throwJetpackError() {
-    
+function throwJetpackError(error) {
+    console.error("Jetpack Error:\n" + error)
 }
