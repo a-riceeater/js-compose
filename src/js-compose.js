@@ -3,7 +3,10 @@
  * 
  * This software is licensed under the MIT License. 
  * See the LICENSE for more information.
+ * 
+ * js-compose v0.0.1
  */ 
+
 "use strict";
 
 const __JETPACK_WINDOW = {};
@@ -12,7 +15,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     try {
         onCreate(__JETPACK_WINDOW)
     } catch (err) {
-
+        throwJetpackError("onCreate function not found")
     }
 })
 
