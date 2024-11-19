@@ -20,11 +20,33 @@ document.addEventListener("DOMContentLoaded", (e) => {
 })
 
 __JETPACK_WINDOW.setContent = function (data) {
-    console.log(data)
-    if (!data.appTheme) return throwJetpackError("No app theme provided");
-    if (typeof data.appTheme != Object) return throwJetpackError("Invalid app theme type. Type Object expected")
+    console.log(data, typeof data.appTheme)
+    if (!data.appTheme || data.appTheme.length == 0) return throwJetpackError("No app theme provided");
+    if (typeof data.appTheme != 'object') return throwJetpackError("Invalid app theme type. Type Array expected")
+
+    for (let i = 0; i < data.appTheme.length; i++) {
+        
+    }
 }
 
-function throwJetpackError(error) {
-    console.error("Jetpack Error:\n" + error)
+function throwJetpackError(error, keyword) {
+    console.error(`Jetpack Error [Error Type ${keyword}]:\n${error}`)
+    return { type: "error", keyword: keyword }
+}
+
+function Modifier() {
+    return {
+        color: "",
+        size: ""
+    }
+}
+
+
+function Text(text, modifier) {
+    if (!text) return throwJetpackError("Missing text content", "undefined")
+    return { type: "text-element", modifier: modifier }
+}
+
+function __createTextElement() {
+
 }

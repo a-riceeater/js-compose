@@ -11,8 +11,12 @@
 function onCreate(window) {
     console.log(window)
     window.setContent({
-        appTheme: {
-            
-        }
+        appTheme: [
+            Text("Hello World", Modifier())
+        ]
     })
+}
+
+function Greeting(name) {
+    
 }
