@@ -46,13 +46,13 @@ function throwJetpackError(error, keyword) {
 function Modifier() {
     const m = {
         __color: "",
-        __size: "",
+        __fontSize: "",
         setColor: function(color) {
             this.__color = color;
             return m
         },
         setSize: function(size) {
-            this.__size = size
+            this.__fontSize = size
             return m
         }
     }
@@ -69,7 +69,7 @@ function Text(text, modifier) {
 function __createTextElement(text, modifier) {
     const element = document.createElement("p")
     element.innerText = text;
-    
+    console.log(modifier)    
     // apply properties from modifier
     Object.entries(modifier).forEach(([key, value]) => {
         if (typeof value == "string") { 
