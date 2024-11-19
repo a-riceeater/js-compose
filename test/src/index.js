@@ -12,11 +12,15 @@ function onCreate(window) {
     console.log(window)
     window.setContent({
         appTheme: [
-            Text("Hello World", Modifier().setColor("red").setSize("32px"))
+            Text("Hello World", Modifier().setColor("red").setSize("32px")),
+            Greeting(window.composable(), "elijah")
         ]
     })
 }
 
-function Greeting(name) {
-    
+function Greeting(Composable, name) {
+    Composable.setContent([
+        Text("Hello "+ name, Modifier().setColor("purple"))
+    ])
+    return Composable;
 }

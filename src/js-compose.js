@@ -5,7 +5,7 @@
  * See the LICENSE for more information.
  * 
  * js-compose v0.0.1
- */ 
+ */
 
 "use strict";
 
@@ -23,19 +23,41 @@ document.addEventListener("DOMContentLoaded", (e) => {
 __JETPACK_WINDOW.setContent = function (data) {
     console.log(data, typeof data.appTheme)
     if (!data.appTheme || data.appTheme.length == 0) return throwJetpackError("No app theme provided");
-    if (typeof data.appTheme != 'object') return throwJetpackError("Invalid app theme type. Type Array expected")
+    if (typeof data.appTheme != 'object') return throwJetpackError("Invalid app theme type. Type object expected")
 
-    for (let i = 0; i < data.appTheme.length; i++) {
-        const element = data.appTheme[i];
-        console.log(element)
-        switch (element.type) {
-            case "error":
-                throwJetpackError("Ended execution due to invalid element supplied.")
-                return
-            case "text":
-                __createTextElement(element.text, element.modifier)
+    function enumerateContent(els) {
+        for (let i = 0; i < els.length; i++) {
+            const element = els[i];
+            console.log(element)
+            switch (element.type) {
+                case "error":
+                    throwJetpackError("Ended execution due to invalid element supplied.")
+                    return
+                case "text":
+                    __createTextElement(element.text, element.modifier)
+                    break
+                case "composable":
+                    enumerateContent(element.__elements)
+            }
         }
     }
+    enumerateContent(data.appTheme)
+    
+}
+
+__JETPACK_WINDOW.composable = function () {
+    const c = {
+        type: "composable",
+        __elements: [],
+        setContent: function (data) {
+            if (!data || data.length == 0) return throwJetpackError("No app theme provided");
+            if (typeof data != 'object') return throwJetpackError("Invalid app theme type. Type Array expected");
+            
+            this.__elements = data;
+            return c;
+        }
+    }
+    return c;
 }
 
 function throwJetpackError(error, keyword) {
@@ -47,11 +69,11 @@ function Modifier() {
     const m = {
         __color: "",
         __fontSize: "",
-        setColor: function(color) {
+        setColor: function (color) {
             this.__color = color;
             return m
         },
-        setSize: function(size) {
+        setSize: function (size) {
             this.__fontSize = size
             return m
         }
@@ -69,11 +91,12 @@ function Text(text, modifier) {
 function __createTextElement(text, modifier) {
     const element = document.createElement("p")
     element.innerText = text;
-    console.log(modifier)    
+    console.log(modifier)
     // apply properties from modifier
     Object.entries(modifier).forEach(([key, value]) => {
-        if (typeof value == "string") { 
-            element.style[key.replace("__", "")] = value; }
+        if (typeof value == "string") {
+            element.style[key.replace("__", "")] = value;
+        }
     })
 
     document.body.appendChild(element);
