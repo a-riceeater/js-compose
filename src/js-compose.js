@@ -44,10 +44,20 @@ function throwJetpackError(error, keyword) {
 }
 
 function Modifier() {
-    return {
-        color: "",
-        size: ""
+    const m = {
+        __color: "",
+        __size: "",
+        setColor: function(color) {
+            this.__color = color;
+            return m
+        },
+        setSize: function(size) {
+            this.__size = size
+            return m
+        }
     }
+    console.log(m)
+    return m
 }
 
 
@@ -59,11 +69,11 @@ function Text(text, modifier) {
 function __createTextElement(text, modifier) {
     const element = document.createElement("p")
     element.innerText = text;
-    console.log(modifier)
     
     // apply properties from modifier
     Object.entries(modifier).forEach(([key, value]) => {
-        element.style[key] = value;
+        if (typeof value == "string") { 
+            element.style[key.replace("__", "")] = value; }
     })
 
     document.body.appendChild(element);
