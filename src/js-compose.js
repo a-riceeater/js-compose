@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     try {
         onCreate(__JETPACK_WINDOW)
     } catch (err) {
+        console.error(err)
         throwJetpackError("onCreate function not found")
     }
 })
@@ -25,7 +26,15 @@ __JETPACK_WINDOW.setContent = function (data) {
     if (typeof data.appTheme != 'object') return throwJetpackError("Invalid app theme type. Type Array expected")
 
     for (let i = 0; i < data.appTheme.length; i++) {
-        
+        const element = data.appTheme[i];
+        console.log(element)
+        switch (element.type) {
+            case "error":
+                throwJetpackError("Ended execution due to invalid element supplied.")
+                return
+            case "text":
+                __createTextElement(element.text, element.modifier)
+        }
     }
 }
 
@@ -44,9 +53,18 @@ function Modifier() {
 
 function Text(text, modifier) {
     if (!text) return throwJetpackError("Missing text content", "undefined")
-    return { type: "text-element", modifier: modifier }
+    return { type: "text", text: text, modifier: modifier }
 }
 
-function __createTextElement() {
+function __createTextElement(text, modifier) {
+    const element = document.createElement("p")
+    element.innerText = text;
+    console.log(modifier)
+    
+    // apply properties from modifier
+    Object.entries(modifier).forEach(([key, value]) => {
+        element.style[key] = value;
+    })
 
+    document.body.appendChild(element);
 }

@@ -12,7 +12,7 @@ function onCreate(window) {
     console.log(window)
     window.setContent({
         appTheme: [
-            Text("Hello World", Modifier())
+            Text("Hello World", { color: "red" })
         ]
     })
 }
