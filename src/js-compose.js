@@ -20,16 +20,6 @@ __JETPACK_WINDOW.setContent = function (data) {
     if (!appTheme) throwJetpackError()
 }
 
-function onCreate(window) {
-    window.setContent({
-        appTheme: {
-
-        }
-    })
-}
-
 function throwJetpackError() {
     
 }
-
-export { onCreate }

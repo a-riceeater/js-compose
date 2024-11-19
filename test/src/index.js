@@ -1,3 +1,8 @@
-import { onCreate } from "./js-compose.js"
 
-onCreate()
+function onCreate(window) {
+    window.setContent({
+        appTheme: {
+            
+        }
+    })
+}
