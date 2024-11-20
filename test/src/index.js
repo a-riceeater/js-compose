@@ -9,10 +9,9 @@
 
 
 function onCreate(window) {
-    console.log(window)
     window.setContent({
         appTheme: [
-            Text("Hello World", Modifier().setColor("red").setSize("32px")),
+            Text("Hello World", { modifier: Modifier().setColor("red").setSize("32px") }),
             Greeting(window.composable(), "elijah")
         ]
     })
@@ -20,7 +19,7 @@ function onCreate(window) {
 
 function Greeting(Composable, name) {
     Composable.setContent([
-        Text("Hello "+ name, Modifier().setColor("purple"))
+        Text("Hello " + name, { modifier: Modifier().setColor("blue") })
     ])
     return Composable;
 }

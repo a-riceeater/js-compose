@@ -21,20 +21,19 @@ document.addEventListener("DOMContentLoaded", (e) => {
 })
 
 __JETPACK_WINDOW.setContent = function (data) {
-    console.log(data, typeof data.appTheme)
     if (!data.appTheme || data.appTheme.length == 0) return throwJetpackError("No app theme provided");
     if (typeof data.appTheme != 'object') return throwJetpackError("Invalid app theme type. Type object expected")
 
     function enumerateContent(els) {
         for (let i = 0; i < els.length; i++) {
             const element = els[i];
-            console.log(element)
             switch (element.type) {
                 case "error":
                     throwJetpackError("Ended execution due to invalid element supplied.")
                     return
                 case "text":
-                    __createTextElement(element.text, element.modifier)
+                    console.log("enum", element)
+                    __createTextElement(element.text, element.properties)
                     break
                 case "composable":
                     enumerateContent(element.__elements)
@@ -69,6 +68,7 @@ function Modifier() {
     const m = {
         __color: "",
         __fontSize: "",
+        __cursor: "",
         setColor: function (color) {
             this.__color = color;
             return m
@@ -76,27 +76,40 @@ function Modifier() {
         setSize: function (size) {
             this.__fontSize = size
             return m
+        },
+        setFontFamily: function (family) {
+            this.__fontFamily = family
+        },
+        setCursor: function (cursor) {
+            this.__cursor = cursor;
         }
     }
-    console.log(m)
     return m
 }
 
 
-function Text(text, modifier) {
+function Text(text, properties) {
     if (!text) return throwJetpackError("Missing text content", "undefined")
-    return { type: "text", text: text, modifier: modifier }
+
+    const modifier = properties.modifier;
+
+    return { type: "text", text: text, modifier: modifier, properties: properties }
 }
 
-function __createTextElement(text, modifier) {
+function __createTextElement(text, properties) {
     const element = document.createElement("p")
     element.innerText = text;
-    console.log(modifier)
+
     // apply properties from modifier
-    Object.entries(modifier).forEach(([key, value]) => {
-        if (typeof value == "string") {
-            element.style[key.replace("__", "")] = value;
+    Object.entries(properties).forEach(([key, value]) => {
+        if (key == "modifier") {
+            Object.entries(value).forEach(([key, value]) => {
+                if (typeof value == "string") {
+                    element.style[key.replace("__", "")] = value;
+                }
+            })
         }
+
     })
 
     document.body.appendChild(element);
