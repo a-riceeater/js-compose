@@ -79,9 +79,11 @@ function Modifier() {
         },
         setFontFamily: function (family) {
             this.__fontFamily = family
+            return m
         },
         setCursor: function (cursor) {
             this.__cursor = cursor;
+            return m
         }
     }
     return m

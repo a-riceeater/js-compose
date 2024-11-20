@@ -19,7 +19,7 @@ function onCreate(window) {
 
 function Greeting(Composable, name) {
     Composable.setContent([
-        Text("Hello " + name, { modifier: Modifier().setColor("blue") })
+        Text("Hello " + name, { modifier: Modifier().setColor("blue").setCursor("pointer") })
     ])
     return Composable;
 }
