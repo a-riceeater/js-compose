@@ -32,11 +32,18 @@ __JETPACK_WINDOW.setContent = function (data) {
                     throwJetpackError("Ended execution due to invalid element supplied.")
                     return
                 case "text":
-                    console.log("enum", element)
                     __createTextElement(element.text, element.properties)
                     break
                 case "composable":
+                    // loop through the tokens returned from composable function
                     enumerateContent(element.__elements)
+                    break
+                case "button":
+                    __createButtonElement(element.text, element.properties)
+                    break
+                case "checkbox":
+                    __createCheckboxElement(element.checked, element.properties)
+                    break
             }
         }
     }
@@ -90,15 +97,15 @@ function Modifier() {
 }
 
 
-function Text(text, properties) {
-    if (!text) return throwJetpackError("Missing text content", "undefined")
+function Text(text, properties = {}) {
+    if (!text) return throwJetpackError("Missing text content", "undefined");
 
     const modifier = properties.modifier;
 
     return { type: "text", text: text, modifier: modifier, properties: properties }
 }
 
-function __createTextElement(text, properties) {
+function __createTextElement(text, properties = {}) {
     const element = document.createElement("p")
     element.innerText = text;
 
@@ -111,8 +118,61 @@ function __createTextElement(text, properties) {
                 }
             })
         }
+        if (key == "onClick") {
+            if (typeof value == "function") {
+                element.addEventListener("click", value)
+            } else return throwJetpackError("Expected type function for onClick")
+        }
 
     })
+
+    document.body.appendChild(element);
+}
+
+function Button(text, properties = {}) {
+    if (!text) return throwJetpackError("Missing text content", "undefined");
+
+    const modifier = properties.modifier;
+
+    return { type: "button", text: text, modifier: modifier, properties: properties }
+}
+
+function __createButtonElement(text, properties) {
+    const element = document.createElement("button");
+    element.innerText = text;
+
+    // apply properties from modifier
+    Object.entries(properties).forEach(([key, value]) => {
+        if (key == "modifier") {
+            Object.entries(value).forEach(([key, value]) => {
+                if (typeof value == "string") {
+                    element.style[key.replace("__", "")] = value;
+                }
+            })
+        }
+        if (key == "onClick") {
+            if (typeof value == "function") {
+                element.addEventListener("click", value)
+            } else return throwJetpackError("Expected type function for onClick")
+        }
+
+    })
+
+    document.body.appendChild(element);
+}
+
+function Checkbox(checked = false, properties = {}) {
+    const modifier = properties.modifier;
+
+    return { type: "checkbox", checked: checked, modifier: modifier, properties: properties }
+}
+
+function __createCheckboxElement(checked, properties) {
+    const element = document.createElement("input");
+    element.type = "checkbox"
+    element.checked = checked
+
+    element.addEventListener("change", properties.onCheckedChange);
 
     document.body.appendChild(element);
 }
