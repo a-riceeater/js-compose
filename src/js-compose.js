@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
         onCreate(__JETPACK_WINDOW)
     } catch (err) {
         console.error(err)
-        throwJetpackError("onCreate function not found")
+        throwJetpackError("onCreate function not found or other error occured during execution.")
     }
 })
 
@@ -71,11 +71,15 @@ function throwJetpackError(error, keyword) {
     return { type: "error", keyword: keyword }
 }
 
+// possibly convert to es6 class?
 function Modifier() {
     const m = {
         __color: "",
         __fontSize: "",
         __cursor: "",
+        __background: "",
+        __border: "",
+        __borderRadius: "",
         setColor: function (color) {
             this.__color = color;
             return m
@@ -90,6 +94,18 @@ function Modifier() {
         },
         setCursor: function (cursor) {
             this.__cursor = cursor;
+            return m
+        },
+        setBackground: function (bg) {
+            this.__background = bg
+            return m
+        },
+        setBorder: function (border) {
+            this.__border = border
+            return m
+        },
+        setBorderRadius: function (radius) {
+            this.__borderRadius = radius
             return m
         }
     }
